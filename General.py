@@ -1,6 +1,5 @@
 
 import tensorflow as tf
-from tensorflow import keras
 
 import numpy as np
 
@@ -10,7 +9,7 @@ import matplotlib.pyplot as plt
 
 print(tf.__version__)
 
-boston_housing = keras.datasets.boston_housing
+boston_housing = tf.keras.datasets.boston_housing
 
 (train_data, train_labels), (test_data, test_labels) = boston_housing.load_data()
 
@@ -37,11 +36,11 @@ test_data = (test_data - mean) / std
 print(train_data[0])  # First training sample, normalized
 
 def build_model():
-  model = keras.Sequential([
-    keras.layers.Dense(64, activation=tf.nn.relu,
+  model = tf.keras.Sequential([
+      tf.keras.layers.Dense(64, activation=tf.nn.relu,
                        input_shape=(train_data.shape[1],)),
-    keras.layers.Dense(64, activation=tf.nn.relu),
-    keras.layers.Dense(1)
+      tf.keras.layers.Dense(1024, activation=tf.nn.elu),
+      tf.keras.layers.Dense(1)
   ])
 
   optimizer = tf.train.RMSPropOptimizer(0.001)
@@ -55,7 +54,7 @@ model = build_model()
 model.summary()
 
 # Display training progress by printing a single dot for each completed epoch.
-class PrintDot(keras.callbacks.Callback):
+class PrintDot(tf.keras.callbacks.Callback):
   def on_epoch_end(self,epoch,logs):
     if epoch % 100 == 0: print('')
     print('.', end = '')
@@ -84,7 +83,7 @@ plot_history(history)
 model = build_model()
 
 # The patience parameter is the amount of epochs to check for improvement.
-early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=20)
+early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20)
 
 history = model.fit(train_data, train_labels, epochs=EPOCHS,
                     validation_split=0.2, verbose=0,
